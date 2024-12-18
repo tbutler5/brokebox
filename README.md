@@ -55,7 +55,7 @@ Follow these steps to set up the Broke Box environment.
    #### Flush the iptables rules.
 
 ### Task 5: Verify Fixes:
-Apache should be running: Test with 'curl http://localhost'.
+   #### Apache should be running: Test with 'curl http://localhost'.
    #### DNS should resolve: Test with 'ping google.com'.
    #### Disk space should be cleared: Check with 'df -h'.
 
