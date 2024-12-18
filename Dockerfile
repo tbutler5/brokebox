@@ -1,5 +1,8 @@
 FROM ubuntu:20.04
 
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install services and tools
 RUN apt-get update && \
     apt-get install -y apache2 mariadb-server sudo iptables && \
