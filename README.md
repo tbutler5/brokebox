@@ -73,7 +73,7 @@ Apache should be running: Test with 'curl http://localhost'.
 - 
    ```bash
    sudo chmod 644 /etc/apache2/apache2.conf
-    sudo chmod 644 /var/log/apache2/error.log
+   sudo chmod 644 /var/log/apache2/error.log
    ```
 
 ### Restart services:
