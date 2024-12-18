@@ -25,90 +25,88 @@ Follow these steps to set up the Broke Box environment.
    docker run --privileged -d --name broke-box -p 2222:22 broke-box
    ```
 
-4. **Log in to the container as different users via SSH**.
 
-- **Log in as admin**:
+4. **Log in as admin**:
    ```bash
    ssh admin@localhost -p 2222
    ```
    **Password**: `adminpassword`
 
-- **Log in as support**:
-   ```bash
-   ssh support@localhost -p 2222
-   ```
-   **Password**: `supportpassword`
-
-- **Log in as user1**:
-   ```bash
-   ssh user1@localhost -p 2222
-   ```
-   **Password**: `userpassword`
 
 ---
 
 ## Tasks:
 
 ### Task 1: Fix Apache Configuration
-**Problem**: Apache web server is not running. Permissions on the file `/etc/apache2/apache2.conf` are incorrect.
+   #### Check the Apache error log in /var/log/apache2/error.log (fix permissions first).
+   #### Identify and fix the broken permissions on /etc/apache2/apache2.conf.
+   #### Restart Apache.
 
-### Task 2: Fix Disk Space Issue
-**Problem**: The `/tmp` directory contains a large file named `/tmp/bigfile` which is consuming disk space.
+### Task 2: Fix DNS Resolution:
+   #### Analyze the DNS error logs in /var/log/syslog.
+   #### Correct the DNS configuration in /etc/resolv.conf.
 
-### Task 3: Fix Broken DNS
-**Problem**: DNS resolution is broken because the file `/etc/resolv.conf` is corrupted.
+### Task 3: Free Disk Space
+   #### Identify the large file filling up disk space in /tmp.
+   #### Delete the file to free up space.
 
-### Task 4: Fix Blocked HTTP Traffic
-**Problem**: HTTP traffic is blocked due to `iptables` firewall rules.
+### Task 4: Unblock HTTP Traffic
+   #### Check the iptables rules blocking HTTP traffic on port 80.
+   #### Flush the iptables rules.
 
-### Task 5: Check File Permissions
-**Problem**: The file `/etc/passwd` has incorrect permissions preventing proper access.
+### Task 5: Verify Fixes:
+Apache should be running: Test with 'curl http://localhost'.
+   #### DNS should resolve: Test with 'ping google.com'.
+   #### Disk space should be cleared: Check with 'df -h'.
 
 ---
 
 ## Solutions:
 
-### Task 1: Fix Apache Configuration
-- **Log in as support**.
-- Fix file permissions:
+### Check logs:
+- 
+   ```bash
+   sudo less /var/log/apache2/error.log
+   ```
+
+### Fix permissions:
+- 
    ```bash
    sudo chmod 644 /etc/apache2/apache2.conf
+    sudo chmod 644 /var/log/apache2/error.log
    ```
-- Restart Apache:
+
+### Restart services:
+- 
    ```bash
    sudo service apache2 start
    ```
 
-### Task 2: Fix Disk Space Issue
-- **Log in as admin**.
-- Identify the large file:
-   ```bash
-   ls -lh /tmp
-   ```
-- Remove the file:
-   ```bash
-   rm /tmp/bigfile
-   ```
-
-### Task 3: Fix Broken DNS
-- **Log in as admin**.
-- Fix DNS configuration:
-   ```bash
-   echo "nameserver 8.8.8.8" > /etc/resolv.conf
-   ```
-
-### Task 4: Fix Blocked HTTP Traffic
+### Fix DNS:
 - **Log in as support**.
 - Flush the `iptables` rules:
    ```bash
-   sudo iptables -F
+   echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
    ```
 
-### Task 5: Check File Permissions
-- **Log in as admin**.
-- Fix file permissions:
+### Free disk space
+- 
    ```bash
-   chmod 644 /etc/passwd
+   sudo rm /tmp/bigfile
+   ```
+
+### Flush firewall rules:
+- 
+   ```bash
+   sudo iptables -F
+   ```
+   
+### Verify all fixes:
+- 
+   ```bash
+   curl http://localhost
+    ping -c 4 google.com
+    df -h
    ```
 
 ---
